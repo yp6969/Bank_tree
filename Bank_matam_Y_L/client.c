@@ -14,7 +14,7 @@ void createBranchClientTree(Client_tree* clientHead){
     clientHead = NULL;
     return;
 }
-
+//////////////////////////////////////////////////////////////////////////
 /*adding new branch to the branch tree
 if the head is null so get the information from the standard input*/
 void addNewClientToBranch(Client_tree** clientHead , Branch* branch){
@@ -24,6 +24,27 @@ void addNewClientToBranch(Client_tree** clientHead , Branch* branch){
     *clientHead = newClient;
     return;
 }
+
+
+// we look for the proper leaf to add it to and then add it.
+Client_tree * add_(Client_tree * clientHead , int ) {
+    if (!t) {
+        Tree *p = ALLOC(Tree,1);    
+        p->value = i;
+        p->left = p->right = NULL;
+        return p;
+    }
+    if (i > t->value) {
+        t->right = tree_add(t->right, i); 
+    } else if (i < t->value) {
+        t->left = tree_add(t->left, i);
+    } else {
+        // value is already there, we don't add it.
+    }
+    return t;
+}
+////////////////////////////////////////////////////////////////////
+
 
 Client* searchClientById_List(Client_tree* clientHead ,  int tempId , int isInput){
     int clientId;
