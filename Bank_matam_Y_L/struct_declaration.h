@@ -74,6 +74,13 @@ typedef struct Bank_t{
 
  Bank bank;
 
+/*******************************************/
+/*   linked list for other information     */
+
+typedef struct Node_t{
+    Client client;
+    struct Node_t* next;
+}Node;
 
 
 #endif

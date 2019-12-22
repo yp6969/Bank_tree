@@ -172,7 +172,7 @@ int getBranchId(){
       if(flag){
           printf("Wrong value\n");
       }
-      printf("Please ENTER branch id\n");
+      printf("Please ENTER branch ID  (number betweene [1 - 500]\n");
       flag=1;
       scanf("%d" , &num);
       getchar();
