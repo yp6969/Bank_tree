@@ -1,10 +1,11 @@
 #include "client.h"
 
 
-/*************************************************/
+/******************************************************/
 /*  *********    adding client tree     ***************/
+
 void addClientToBranch_t(Branch* branch){
-    Client* tempClient  = createNewClient();
+    Client* tempClient  = createNewClient(branch->branchId);
     branch->clientHead = addNewClientToBranch(branch->clientHead , *tempClient );
     updateNewClientToBranch( branch  , *tempClient );
     FREE(tempClient);
@@ -16,9 +17,9 @@ void createBranchClientTree(Client_tree* clientHead){
     return;
 }
 
-Client* createNewClient(){
+Client* createNewClient( int branchId ){
     Client* newClient = ALLOC (Client , 1 );
-    updateClientParameters( &newClient );
+    updateClientParameters( &newClient , branchId );
     return newClient;
 } 
 
@@ -43,52 +44,117 @@ Client_tree * addNewClientToBranch(Client_tree * clientHead , Client client  ) {
     return clientHead;
 }
 
-//////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////
+/********************************************************************/
+/*                       searching clients                          */
 
 
-Client* searchClientById_List(Client_tree* clientHead ,  int tempId , int isInput){
-    int clientId;
-    Client_tree* temp = clientHead;
-    if(isInput) clientId = getClientId();
-    else clientId = tempId;
-    while( temp ){
-        if(((temp->client).clientId) == clientId) return &temp->client;
-        else temp = temp->next;
+/* handle the finding options */
+void findClient(D_Llinked_List* list ){
+    int option;
+    Client* client;
+    printf("\nHow do you want to find\n");
+    printf("[1] Client ID\n");
+    printf("[2] Account balance\n");
+    printf("[3] Go back\n");
+    scanf("%d",&option);
+    switch (option)
+    {
+    case 1:
+        searchClientByIdInBank( branchHead , getClientId() );
+        break;
+    case 2:
+        findClientInBankByAcountBalance( list , branchHead , getAcountBalance() );
+        break;
+    case 3:
+        return;
+    default:
+            printf("wrong choise try again\n");
+    
     }
-    printf("\nClient not found! maybe try again\n");
-    return NULL;
 }
 
 
-Node* findClientInBranch(Node* list , Client_tree* clientHead , int acountBalance){
-    if(!clientHead) return NULL;
-    else if (clientHead->client.acountBalance == acountBalance ) return addNode( list , clientHead->client );
-    else if ( clientHead->client.acountBalance > acountBalance ){
-        list = findClientInBranch( list , clientHead->left , acountBalance );
-    }
-    else if( clientHead->client.acountBalance < acountBalance ){
-        list = findClientInBranch( list , clientHead->right , acountBalance );
-    }
-    return list;
+/* find Client In the bank By Acount Balance and insert to linked list*/
+void findClientInBankByAcountBalance(D_Llinked_List* list ,Branch_tree* branchHead ,  int acountBalance ){
+    if(!branchHead) return;
+    findClientInBankByAcountBalance(list , branchHead->left , acountBalance);
+    findClientInBranchByAcountBalance(list , branchHead->branch.clientHead , acountBalance );
+    findClientInBankByAcountBalance(list , branchHead->right , acountBalance );
 }
 
-//////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
+/* find Client In Branch By Acount Balance and insert to linked list*/
+void findClientInBranchByAcountBalance(D_Llinked_List* list , Client_tree* clientHead , int acountBalance){
+    if(!clientHead) return;
+    findClientInBranchByAcountBalance(list , clientHead->left , acountBalance );
+    if(clientHead->client.acountBalance == acountBalance )
+        addNode(list , &clientHead->client );
+    findClientInBranchByAcountBalance(list , clientHead->right , acountBalance );
+}
+
+
+/* searching client by ID in the Bank !!!! */
+ Client* searchClientByIdInBank(Branch_tree* branchHead ,  int clientId ){
+    Client* client;
+    if(!branchHead) return NULL;
+    client = searchClientByIdInBank( branchHead->left , clientId);
+    if(client) return client;
+    client = searchClientById(branchHead->branch.clientHead , clientId );
+    if(client) return client;
+    client = searchClientByIdInBank(branchHead->right , clientId );
+    return client;
+}
+
+
+/* searching client by ID in spesific branch */
+Client* searchClientById( Client_tree* clientHead , int clientId ){
+    if( !clientHead) return NULL;
+    if(clientHead->client.clientId > clientId ){
+        searchClientById(clientHead->left , clientId );
+    }
+    else if(clientHead->client.clientId < clientId){
+        searchClientById(clientHead->right , clientId );
+    }
+    else return &clientHead->client;
+}
+
+
+
+/* adding new client to Linked list and sort bi ID */
+void addNode(D_Llinked_List* list , Client* newClient ){
+    Node* node = ALLOC( Node , 1 );
+    Node* head = list->head;
+    int clientId = newClient->clientId;
+    node->client = *newClient;
+
+    while( head->client.branchId  <= clientId || !head->next  ){
+        head = head->next;
+    }
+    if(head->client.clientId > clientId){
+        node->prev = head->prev;
+        head->prev = node;
+        node->next = head;
+        if(!node->prev){
+            head->prev->next = node;
+            list->head = node;
+        }
+    }
+    else {
+        head->next = node;
+        node->prev = head;
+    }
+}
 
 
 /*************************************************/
 /*  *********     client data     ***************/
 
 /*updates all the client parameters.*/
-void updateClientParameters(Client** client ){
+void updateClientParameters(Client** client , int banchId){
     updateFirstNameOfClient( &(*client) -> firstNameOfClient);
     updateLastNameOfClient( &(*client) -> lastNameOfClient);
     updateNameOfBank( &(*client) -> nameOfBank , NON );
     updateClientId( &(*client) -> clientId);
-    updateBranchId( &(*client) -> branchId);
+    updateBranchId( &(*client) -> branchId , banchId , NON );
     updateAccountNumber( &((*client) -> accountNumber));
     updateAuthorizedException(&((*client) -> authorizedException ));
     updateAccountBalance( &((*client) -> acountBalance) , NON , NON);
@@ -130,7 +196,6 @@ void depositeMoneyToSave(Client* client){
 void loanToClient(Client* client , Branch* branch){
     int flag = 0;
     double deposit;
-    Branch* branch = searchBranchById_List( client->branchId , NON );
     do{
         if(flag) printf("\n\nyou pass the authorized Exception try again!\n\n");
         flag = 1;
@@ -145,7 +210,6 @@ void loanToClient(Client* client , Branch* branch){
 
 /*repay client loans*/
 void repayClientLoans(Client* client , Branch* branch ){
-    Branch* branch = searchBranchById_List(client->branchId , NON );
     double deposit;
     printf("\nHow much do you want to repay your loan ? :\n\n" );
     deposit = getDpositeMoney();
@@ -172,5 +236,13 @@ void printClientDetails(Client* client){
     printf("acount Balance: %g \n" , client -> acountBalance);
     printf("loan Balance: %g \n" , client -> loanBalance);
     printf("save Blance: %g \n" , client -> saveBlance);
+    return;
+}
+
+void printClientId(Client_tree* clientHead ){
+    if(!clientHead) return;
+    printClientId(clientHead->left);
+    printf("Client ID : [%d]\n" , clientHead->client.clientId);
+    printClientId(clientHead->right);
     return;
 }

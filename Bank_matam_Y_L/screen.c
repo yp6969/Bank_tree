@@ -9,10 +9,10 @@ void screenSystem(){
     printf("\nHello and welcome to %s's Bank\nwhere your money need to be safe!! :) \n\n", bank.nameOfBank );
     FOREVER {
         printf("******************************************\n");
-        printf("\nchose youre option:\n\n ");
+        printf("\nchose youre option:\n\n");
         printf(" 1)Bank meneger\n");
         printf(" 2)Branch meneger\n");
-        printf(" 3) Client\n");
+        printf(" 3)Client\n");
         printf(" 4)Exit \n");
         printf("******************************************\n");
         scanf("%d",&option);
@@ -55,6 +55,7 @@ void screenSystem(){
 
 /*menu of the bank meneger option only*/
 void bankMenegerOption(){
+    D_Llinked_List* list = ALLOC( D_Llinked_List , 1 );
     int option , cnt_client;
     printf("Hello %s the graitest meneger in the world\nwhat are you willing to do?\n\n" , bank.nameOfBank);
     FOREVER{
@@ -63,7 +64,8 @@ void bankMenegerOption(){
         printf(" 2)Add new branch\n");
         printf(" 3)Client number of bank\n");
         printf(" 4)Averege number Client of bank\n");
-        printf(" 5)Go back \n\n");
+        printf(" 5)Find client in bank\n");
+        printf(" 6)Go back \n\n");
         printf("*************************************\n");
         scanf("%d",&option);
         getchar();
@@ -81,6 +83,9 @@ void bankMenegerOption(){
                 printf("The avereg is : %g " , averageNumberOfAccountsInBranches(branchHead , &cnt_client ));
                 continue;
             case 5:
+                findClient(list);
+                continue;
+            case 6:
                 return;
             default:
                 printf("wrong choise try again\n");
@@ -91,11 +96,13 @@ void bankMenegerOption(){
 
 /*menu of the branch meneger option only*/
 void branchMenegerOption(){
-    int option , count = 0 , flag = 0 ;
+    int option , count = 0 , flag = 0 , tmpAccountBalance;
     Branch* branch;
     /* searching the spucific branch */
     do{
         if(flag) printf(" Wrong branch ID rty again ");
+        printf("Choose one of the next branches\n");
+        printBranchsId(branchHead);
         branch = searchBranchById( branchHead , getBranchId() );
         flag = 1;
     }while(!branch);
@@ -119,8 +126,9 @@ void branchMenegerOption(){
                 addClientToBranch_t(branch);
                 continue;
             case 3:
+                tmpAccountBalance = getAcountBalance();
                 printf("The number of clients with the wanted balance is : ");
-                printf(" %d \n", clientNumberWithGivenBalance(branch->clientHead , getAcountBalance()));
+                printf(" %d \n", clientNumberWithGivenBalance(branch->clientHead , tmpAccountBalance ));
                 continue;
             case 4:
                 printf("The number of clients with the wanted balance is : ");
@@ -146,8 +154,12 @@ void clientOption(){
     int option , flag = 0 ;
     do{
         if(flag) printf(" Wrong branch or client ID try again ");
+        printf("Choose one of the next branches\n");
+        printBranchsId(branchHead);
         branch = searchBranchById( branchHead , getBranchId() );
-        client = searchClientById( branch->clientHead , getClientId() );  //////////////////////
+        printf("Choose one of the next client\n");
+        printClientId(branch->clientHead);
+        client = searchClientById( branch->clientHead , getClientId() );
         flag = 1;
     }while(!branch || !client );
     /*  chose youre option */

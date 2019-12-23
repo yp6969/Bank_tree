@@ -12,7 +12,7 @@ void updateBankParameters(){
 }
 /*creating the branch list with the maximum optional size*/
 void inituilizeBank(){
-    createBranchList();
+    createBranchTree();
     updateBankParameters();
 }
 
@@ -54,7 +54,7 @@ double averageNumberOfAccountsInBranches(Branch_tree* branchHead , int* cnt_clie
     double averageLeft , averageRight;
     if( !branchHead ) {
         *cnt_clients = 0;
-        return ;
+        return 0;
     }
     /* ask for the averege of the left right childs */
     averageLeft = averageNumberOfAccountsInBranches( branchHead -> left , &numOfBranchLeft );

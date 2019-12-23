@@ -59,7 +59,6 @@ typedef struct Branch_tree_t{
 Branch_tree* branchHead;
 
 
-
 /*******************************************/
 /*   ******     Bank data     ********    */
 
@@ -79,8 +78,14 @@ typedef struct Bank_t{
 
 typedef struct Node_t{
     Client client;
+    struct Node_t* prev;
     struct Node_t* next;
 }Node;
+
+
+typedef struct {
+    Node* head;
+}D_Llinked_List;
 
 
 #endif
