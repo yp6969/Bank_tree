@@ -26,6 +26,7 @@ void updateBranchParameters(Branch* branch);/*general*/
 double calculateBranchProfitOfLastYear(Branch* branch);
 void printBranchDetails(Branch* branch);
 void printClientAcountNumberAndBalance(Client_tree* clientHead);
+void printBranchsId(Branch_tree* branchHead);
 int clientNumberWithGivenBalance(Client_tree *clientHead , double Balance);
 int clientNumberWithBiggerLoansThenBalance( Client_tree *clientHead );
 

@@ -20,8 +20,8 @@ void createBranchTree(){
 }
 /* creat new branch */
 Branch* createNewBranch(){
-    Branch* newBranch = ALLOC (Branch*,1);
-    updateBranchParameters( &newBranch );
+    Branch* newBranch = ALLOC (Branch,1);
+    updateBranchParameters( newBranch );
     return newBranch;
 }
 
@@ -80,7 +80,7 @@ flag means NON for 1 delete for -1.*/
 void updateBranchParameters(Branch* branch){
     updateNameOfBank(&branch->nameOfBank , NON );
     updateNameOfBranch(&branch->branchName);
-    updateBranchId( &branch->branchId );
+    updateBranchId( &branch->branchId , NON , ADD );
     updateNumberOfBranchClients( &(branch->numberOfBranchClients) , NON , NON );
     updateSumOfAllBranchClients( &(branch->sumOfAllBranchClients) , NON , NON);
     updateBranchProfitOfLastYear( &(branch->branchProfitOfLastYear) , NON , NON );
@@ -116,6 +116,13 @@ void printClientAcountNumberAndBalance(Client_tree* clientHead){
     return;
 }
 
+/*prunt all the branchs ID */
+void printBranchsId(Branch_tree* branchHead){
+    if(!branchHead) return ;
+    printBranchsId(branchHead->left);
+    printf("Branch [%d]\n" , branchHead->branch.branchId);
+    printBranchsId(branchHead->right);
+}
 
 //recursive method to find number of appearance of client with account balance that bigger then given balance
 int clientNumberWithGivenBalance(Client_tree *clientHead , double Balance) {
@@ -142,7 +149,7 @@ int clientNumberWithBiggerLoansThenBalance( Client_tree *clientHead ) {
         count++;
     }
     count += clientNumberWithBiggerLoansThenBalance( clientHead -> right );
-
     return count;
 
 }
+

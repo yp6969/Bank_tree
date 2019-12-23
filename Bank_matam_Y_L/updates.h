@@ -21,7 +21,7 @@ void updateNumberOfBankActiveLoan(int* numberOfActiveLoans , int temp , int isIn
 /* isInput is flag that means if the date come ftom the user*/
 
 void updateNameOfBranch(char** branchName);
-void updateBranchId(int* branchId);
+void updateBranchId(int* branchId  , int tmpBranchId , int isInput );
 void updateNumberOfBranchClients(int* numberOfBranchClients , int temp , int isInput );
 void updateSumOfAllBranchClients(double* sumOfAllBranchClients , double temp , int isInput);
 void updateBranchProfitOfLastYear(double* branchProfitOfLastYear , double temp , int isInput);
@@ -34,7 +34,6 @@ amountOfMoney means adding or subtract mony depend on sign.*/
 void updateFirstNameOfClient(char** firstNameOfClient);
 void updateLastNameOfClient(char** lastNameOfClient);
 void updateClientId(int* clientId);
-void updateBranchId(int* branchId);
 void updateAccountNumber(int* accountNumber);
 void updateAuthorizedException(double* authorizedException );
 void updateAccountBalance(double* acountBalance , double amountOfMoney  , int isInput );

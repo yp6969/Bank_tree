@@ -55,8 +55,9 @@ void updateNameOfBranch(char** branchName){
 }
 
 /*this function update the Id of a branch*/
-void updateBranchId(int* branchId){
-    *branchId = getBranchId();
+void updateBranchId(int* branchId  , int tmpBranchId , int isInput ){
+    if(!isInput) *branchId = tmpBranchId;
+    else *branchId = getBranchId();
     return;
 }
 
