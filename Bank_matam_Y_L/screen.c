@@ -77,10 +77,10 @@ void bankMenegerOption(){
                 addNewBranch_t();
                 continue;
             case 3:
-                clientNuberOfBank();
+                printf("client number is: %d\n" , clientNuberOfBank());
                 continue;
             case 4:
-                printf("The avereg is : %g " , averageNumberOfAccountsInBranches(branchHead , &cnt_client ));
+                printf("The avereg is : %g \n" , averageNumberOfAccountsInBranches(branchHead , &cnt_client ));
                 continue;
             case 5:
                 findClient(list);

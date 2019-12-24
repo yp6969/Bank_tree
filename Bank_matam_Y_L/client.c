@@ -61,7 +61,7 @@ void findClient(D_Llinked_List* list ){
     switch (option)
     {
     case 1:
-        searchClientByIdInBank( branchHead , getClientId() );
+        client = searchClientByIdInBank( branchHead , getClientId() );
         break;
     case 2:
         findClientInBankByAcountBalance( list , branchHead , getAcountBalance() );
@@ -110,14 +110,17 @@ void findClientInBranchByAcountBalance(D_Llinked_List* list , Client_tree* clien
 
 /* searching client by ID in spesific branch */
 Client* searchClientById( Client_tree* clientHead , int clientId ){
+    Client* temp;
     if( !clientHead) return NULL;
     if(clientHead->client.clientId > clientId ){
-        searchClientById(clientHead->left , clientId );
+        temp = searchClientById(clientHead->left , clientId );
     }
     else if(clientHead->client.clientId < clientId){
-        searchClientById(clientHead->right , clientId );
+        temp = searchClientById(clientHead->right , clientId );
     }
     else return &clientHead->client;
+    
+    return temp;
 }
 
 
@@ -213,12 +216,15 @@ void loanToClient(Client* client , Branch* branch){
 
 /*repay client loans*/
 void repayClientLoans(Client* client , Branch* branch ){
-    if(client->loanBalance >= 0 ){ 
+    
+    double deposit;
+    
+    if(client->loanBalance >= 0 ){
         printf("you dont have loans");
         bank.numberOfActiveLoans = 0;
         return;
     }
-    double deposit;
+    
     printf("\nHow much do you want to repay your loan ? :\n\n" );
     deposit = getDpositeMoney();
     updateLoanBalance(&client->loanBalance , -deposit , NON );

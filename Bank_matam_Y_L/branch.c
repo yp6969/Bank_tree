@@ -61,15 +61,19 @@ int isBranchFull(int numberOfBranchClients){
 /*                         search branch                        */
 
 Branch* searchBranchById( Branch_tree* branchHead , int  branchId ){
+    
+    Branch* temp;
+    
     if( !branchHead) return NULL;
-
     if(branchHead->branch.branchId > branchId ){
-        searchBranchById(branchHead->left , branchId );
+        temp = searchBranchById(branchHead->left , branchId );
     }
     else if(branchHead->branch.branchId < branchId){
-        searchBranchById(branchHead->right , branchId );
+        temp = searchBranchById(branchHead->right , branchId );
     }
     else return &branchHead->branch;
+    
+    return temp;
 }
 
 /*************************************************/
@@ -124,7 +128,7 @@ void printBranchsId(Branch_tree* branchHead){
     printBranchsId(branchHead->right);
 }
 
-//recursive method to find number of appearance of client with account balance that bigger then given balance
+/*recursive method to find number of appearance of client with account balance that bigger then given balance*/
 int clientNumberWithGivenBalance(Client_tree *clientHead , double Balance) {
     int count = 0 ;
     if(!clientHead) {
@@ -138,7 +142,7 @@ int clientNumberWithGivenBalance(Client_tree *clientHead , double Balance) {
     return count;
 }
 
-//recursive method to find number of appearance of client with account balance that lower then given loan balance
+/*recursive method to find number of appearance of client with account balance that lower then given loan balance*/
 int clientNumberWithBiggerLoansThenBalance( Client_tree *clientHead ) {
     int count = 0 ;
     if(!clientHead) {
