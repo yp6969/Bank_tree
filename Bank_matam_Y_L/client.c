@@ -19,6 +19,7 @@ void createBranchClientTree(Client_tree* clientHead){
 
 Client* createNewClient( int branchId ){
     Client* newClient = ALLOC (Client , 1 );
+    newClient->acountBalance = 0;
     updateClientParameters( &newClient , branchId );
     return newClient;
 } 
@@ -71,6 +72,8 @@ void findClient(D_Llinked_List* list ){
             printf("wrong choise try again\n");
     
     }
+
+
 }
 
 
@@ -210,6 +213,11 @@ void loanToClient(Client* client , Branch* branch){
 
 /*repay client loans*/
 void repayClientLoans(Client* client , Branch* branch ){
+    if(client->loanBalance >= 0 ){ 
+        printf("you dont have loans");
+        bank.numberOfActiveLoans = 0;
+        return;
+    }
     double deposit;
     printf("\nHow much do you want to repay your loan ? :\n\n" );
     deposit = getDpositeMoney();

@@ -42,6 +42,9 @@ void updateBankProfitOfLastYear(double* profitOfLastYear , double temp , int isI
 /*this function update the number of bank loans*/
 void updateNumberOfBankActiveLoan(int* numberOfActiveLoans , int temp , int isInput){
     if( isInput ) *numberOfActiveLoans = getNumberOfActiveLoans();
+    else if (*numberOfActiveLoans <= 0 ){
+        return;
+    }
     else (*numberOfActiveLoans)+=temp;
     return;
 }
