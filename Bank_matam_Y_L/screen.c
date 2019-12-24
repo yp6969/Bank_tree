@@ -152,16 +152,19 @@ void clientOption(){
     Branch* branch;
     Client* client;
     int option , flag = 0 ;
-    do{
+    FOREVER{
         if(flag) printf(" Wrong branch or client ID try again ");
+        flag = 1;
         printf("Choose one of the next branches\n");
         printBranchsId(branchHead);
         branch = searchBranchById( branchHead , getBranchId() );
+        if(!branch) continue;
         printf("Choose one of the next client\n");
         printClientId(branch->clientHead);
         client = searchClientById( branch->clientHead , getClientId() );
-        flag = 1;
-    }while(!branch || !client );
+        if(!branch) continue;
+        break;
+    }
     /*  chose youre option */
     printf("Hello Client %d!! \nwhat are you willing to do?\n\n", client -> accountNumber);
     FOREVER{
