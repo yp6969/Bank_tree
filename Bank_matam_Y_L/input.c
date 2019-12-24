@@ -40,12 +40,15 @@ void check_for_exit() {
 
 /*this function is geting the name of the bank*/
 void getNameOfBank(char** nameOfBank , int isInput ){
+    
+    char name[MAX_NAME];
+    int flag=0;
+    
     if(!isInput) {
         *nameOfBank = strdup( bank.nameOfBank );
         return;
     }
-    char name[MAX_NAME];
-    int flag=0;
+
     do{
         if(flag){
             printf("Wrong value\n");
