@@ -37,7 +37,7 @@ typedef struct Client_tree_t{
 /*    ******       branch data        *******   */
 
 typedef struct Branch_t{
-    char* nameOfBank; 
+    char* nameOfBank;
     char* branchName;
     int branchId;
     int numberOfBranchClients;

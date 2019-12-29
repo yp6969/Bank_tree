@@ -57,23 +57,93 @@ int isBranchFull(int numberOfBranchClients){
     return FALSE;
 }
 
-/****************************************************************/
-/*                         search branch                        */
+/**********************************************************/
+/*******             delete branches               ********/
 
-Branch* searchBranchById( Branch_tree* branchHead , int  branchId ){
-    
-    Branch* temp;
-    
-    if( !branchHead) return NULL;
-    if(branchHead->branch.branchId > branchId ){
-        temp = searchBranchById(branchHead->left , branchId );
-    }
-    else if(branchHead->branch.branchId < branchId){
-        temp = searchBranchById(branchHead->right , branchId );
-    }
-    else return &branchHead->branch;
-    
+/* deleting all the branchs in the bank*/
+Branch_tree* deleteAllBranchs(Branch_tree* branchTree){
+    Branch_tree* temp;
+    if(!branchTree) return NULL;
+    temp = deleteAllBranchs(branchTree->left);
+    temp = deleteAllBranchs(branchTree->right);
+    freeBranch(branchTree);
     return temp;
+}
+
+/* delete spesific branch by id*/
+Branch_tree* deleteBranch(Branch_tree* branchTree , int branchId ){
+    Branch_tree *branchNode , *branchNode_2 , *parent;
+    Branch tempBranch;
+    parent = NULL;
+    branchNode = findDeletedBranch(branchTree , branchId , &parent);
+    if(!branchNode){
+        printf("Branch not found\n");
+        return branchTree;
+    }
+    if(IS_LEAF(branchNode)){
+        if(parent){
+            if(parent->left == branchNode) parent->left = NULL;
+            else parent->right = NULL;
+            freeBranch(branchNode);
+            return branchTree;
+        }
+        else{
+            freeBranch(branchNode);
+            return NULL;
+        }
+    }
+    else{
+        if(branchNode->left){
+            branchNode_2 = find_Max_Branch(branchNode->left);
+            SWAP(branchNode->branch , branchNode_2->branch , tempBranch);
+            branchNode->left = deleteBranch(branchNode->left , branchId );
+        }
+        else{
+            branchNode_2 = find_Min_Branch(branchNode->right);
+            SWAP(branchNode->branch , branchNode_2->branch , tempBranch );
+            branchNode->right = deleteBranch(branchNode->right , branchId );
+        }
+    }
+    return branchTree;
+}
+
+/* finds the branch the wanted to delete */
+Branch_tree* findDeletedBranch(Branch_tree* branchTree , int branchId , Branch_tree** parent){
+    if(!branchTree) return NULL;
+    if(branchTree->branch.branchId == branchId){
+        return branchTree;
+    }
+    if(branchTree->branch.branchId > branchId){
+        if(parent) *parent = branchTree;
+        return findDeletedBranch(branchTree->left , branchId , parent);
+    }
+    if(parent) *parent = branchTree;
+    return findDeletedBranch(branchTree->right , branchId , parent);
+}
+
+/* fides the maximum id in the branch tree */
+Branch_tree* find_Max_Branch(Branch_tree *branchNode){
+    if(!branchNode)return NULL;
+    if(branchNode->right)
+        return find_Max_Branch(branchNode->right);
+    return branchNode;
+}
+
+/* findes the minimum id in the branch tree */
+Branch_tree* find_Min_Branch(Branch_tree *branchNode){
+    if(!branchNode)return NULL;
+    if(branchNode->left)
+        return find_Min_Branch(branchNode->left);
+    return branchNode;
+}
+
+/* free all the allocated blockes*/
+void freeBranch(Branch_tree *branchTree){
+    updateNumberOfBranch(&bank.numberOfBranch , DELETE , NON);
+    branchTree->branch.clientHead = deleteAllBranchClients(branchTree->branch.clientHead);
+    FREE(branchTree->branch.nameOfBank);
+    FREE(branchTree->branch.branchName);
+    FREE(branchTree);
 }
 
 /*************************************************/
@@ -93,6 +163,7 @@ void updateBranchParameters(Branch* branch){
     updateCloseHour( &(branch->closeHour) );
     return;
 }
+
 
 /*calculate the branch profit of the last year*/
 double calculateBranchProfitOfLastYear(Branch* branch){

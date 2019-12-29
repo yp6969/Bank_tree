@@ -59,6 +59,7 @@ void getNameOfBank(char** nameOfBank , int isInput ){
         name[strlen(name)-1] = '\0';
     }while(!checkNameOfBank(name));
     *nameOfBank = strdup( name );
+    allocated_blocks++;
     return ;
 }
 
@@ -164,6 +165,7 @@ void getNameOfBranch(char** nameOfBranch){
         name[strlen(name)-1] = '\0';
     }while(!checkNameOfBank(name));
     *nameOfBranch = strdup( name );
+    allocated_blocks++;
     return ;
 }
 
@@ -306,6 +308,7 @@ void getFirstNameOfClient(char** firstNameOfClient){
         name[strlen(name)-1] = '\0';
     }while(!checkNameOfClient(name));
     *firstNameOfClient = strdup(name);
+    allocated_blocks++;
     return;
 }
 /*this function is geting string name of the branch with known size and replace it with lower size new one*/
@@ -322,6 +325,7 @@ void getLastNameOfClient(char** lastNameOfClient){
         name[strlen(name)-1] = '\0';
     }while(!checkNameOfBank(name));
     *lastNameOfClient = strdup( name );
+    allocated_blocks++;
     return ;
 }
 
