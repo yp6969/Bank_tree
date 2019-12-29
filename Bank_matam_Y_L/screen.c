@@ -65,7 +65,9 @@ void bankMenegerOption(){
         printf(" 3)Client number of bank\n");
         printf(" 4)Averege number Client of bank\n");
         printf(" 5)Find client in bank\n");
-        printf(" 6)Go back \n\n");
+        printf(" 6)Delete all Branches\n");
+        printf(" 7)Delete branch\n");
+        printf(" 8)Go back \n\n");
         printf("*************************************\n");
         scanf("%d",&option);
         getchar();
@@ -86,6 +88,26 @@ void bankMenegerOption(){
                 findClient(list);
                 continue;
             case 6:
+                if(bank.numberOfBranch == 0 ){
+                    printf("\nThere is no branches yet\nPlease creat one in the bank\n\n" );
+                    continue;
+                }
+                else{
+                    branchHead = deleteAllBranchs( branchHead );
+                    continue;
+                }
+            case 7:
+                if(bank.numberOfBranch == 0 ){
+                    printf("\nThere is no branches yet\nPlease creat one in the bank\n\n" );
+                    continue;
+                }
+                else{
+                    printf("Choose one of the following\n");
+                    printBranchsId(branchHead);
+                    branchHead = deleteBranch( branchHead , getBranchId() );
+                    continue;
+                }
+            case 8:
                 return;
             default:
                 printf("wrong choise try again\n");
@@ -114,7 +136,9 @@ void branchMenegerOption(){
         printf(" 3)client number with given balance\n");
         printf(" 4)client number with bigger loans then balance \n");
         printf(" 5)Print client acount number and balance \n");
-        printf(" 6)Go back\n");
+        printf(" 6)Delete All branch clients \n");
+        printf(" 7)Delete client \n");
+        printf(" 8)Go back\n");
         printf("*************************************************\n");
         scanf("%d",&option);
         getchar();
@@ -138,6 +162,26 @@ void branchMenegerOption(){
                 printClientAcountNumberAndBalance(branch->clientHead);
                 continue;
             case 6:
+                if(branch->numberOfBranchClients == 0 ){
+                    printf("\nThere is no client yet\nPlease creat one in the branch option\n\n" );
+                    continue;
+                }
+                else{
+                    branch->clientHead = deleteAllBranchClients(branch->clientHead);
+                    continue;
+                }
+            case 7:
+                if(branch->numberOfBranchClients == 0 ){
+                    printf("\nThere is no client yet\nPlease creat one in the branch option\n\n" );
+                    continue;
+                }
+                else{
+                    printf("Choose one of the following\n");
+                    printClientId(branch->clientHead);
+                    branch->clientHead = deleteClient(branch->clientHead , getClientId() );
+                    continue;
+                }
+            case 8:
                 return;
             default:
                 printf("wrong choise try again\n");

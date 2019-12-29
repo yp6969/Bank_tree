@@ -151,6 +151,115 @@ void addNode(D_Llinked_List* list , Client* newClient ){
 }
 
 
+/********************************************************/
+/******              delete clients                ******/
+
+/*  delete all the branch clients*/
+Client_tree* deleteAllBranchClients(Client_tree* clientHead ){
+    Client_tree* tempClient;
+    if(!clientHead) return NULL;
+    tempClient = deleteAllBranchClients(clientHead->left);
+    tempClient = deleteAllBranchClients(clientHead->right);
+    freeClient(clientHead);
+    return NULL;
+}
+
+/*  delete specific client by id*/
+Client_tree* deleteClient(Client_tree* clientHead , int clientId ){
+    Client_tree *clientNode , *clientNode_2 , *parent;
+    Client tempClient;
+    parent = NULL;
+    clientNode = findDeleteClient( clientHead , clientId , &parent);
+    if(!clientNode) return clientHead;
+    if(IS_LEAF(clientNode)){
+        if(parent){
+            if(parent->left = clientNode) parent->left = NULL;
+            else parent->right = NULL;
+            freeClient(clientNode); 
+        }
+        else {
+            freeClient(clientNode);
+            return NULL;
+        }
+    }
+    else{
+        if(clientNode->left){
+            clientNode_2 = find_max_client(clientNode->left);
+            SWAP(clientNode->client , clientNode_2->client , tempClient );
+            clientNode->left = deleteClient(clientNode->left , clientId );
+        }
+        else{
+            clientNode_2 = find_min_client(clientNode->right);
+            SWAP(clientNode->client , clientNode_2->client , tempClient );
+            clientNode->right = deleteClient(clientNode->right , clientId );
+        }
+    }
+    return clientHead;
+}
+
+/* finds the wanted client for deletion*/
+Client_tree* findDeleteClient(Client_tree* clientNode , int clientId , Client_tree** parent){
+    if(!clientNode) return NULL;
+    if(clientNode->client.clientId == clientId){
+        return clientNode;
+    }
+    if(clientNode->client.clientId > clientId){
+        if(parent) *parent = clientNode;
+        return findDeleteClient(clientNode->left , clientId , parent);
+    }
+    if(parent) *parent = clientNode;
+    return findDeleteClient(clientNode->right , clientId , parent);
+}
+
+/*  finds the bigest client ID in the tree*/
+Client_tree* find_max_client(Client_tree* clientNode){
+    if(!clientNode) return NULL;
+    if(clientNode->right){
+        return find_max_client(clientNode->right);
+    }
+    return clientNode;
+}
+
+/*  finds the lowest client ID in the tree*/
+Client_tree* find_min_client(Client_tree* clientNode){
+    if(!clientNode) return NULL;
+    if(clientNode->left){
+        return find_max_client(clientNode->left);
+    }
+    return clientNode;
+}
+
+
+/* free all the allocated blockes in the client*/
+void freeClient(Client_tree* clientNode){
+    updateDeleteClient(clientNode->client);
+    FREE(clientNode->client.nameOfBank);
+    FREE(clientNode->client.firstNameOfClient);
+    FREE(clientNode->client.lastNameOfClient);
+    FREE(clientNode);
+    return;
+}
+
+
+/****************************************************************/
+/*                         search branch                        */
+
+Branch* searchBranchById( Branch_tree* branchHead , int  branchId ){
+    
+    Branch* temp;
+    
+    if( !branchHead) return NULL;
+    if(branchHead->branch.branchId > branchId ){
+        temp = searchBranchById(branchHead->left , branchId );
+    }
+    else if(branchHead->branch.branchId < branchId){
+        temp = searchBranchById(branchHead->right , branchId );
+    }
+    else return &branchHead->branch;
+    
+    return temp;
+}
+
 /*************************************************/
 /*  *********     client data     ***************/
 
@@ -166,6 +275,16 @@ void updateClientParameters(Client** client , int banchId){
     updateAccountBalance( &((*client) -> acountBalance) , NON , NON);
     updateLoanBalance( &((*client) -> loanBalance) , NON , NON);
     updateSaveBalance( &((*client) -> saveBlance) , NON , NON);
+    return;
+}
+
+void updateDeleteClient(Client client ){
+    Branch* branch = searchBranchById(branchHead , client.branchId );
+    updateNumberOfBankClients( &bank.numberOfBankClients , DELETE , NON );
+    updateSumOfAllBankClients(&bank.sumOfAllBankClients , -(client.acountBalance - client.loanBalance) , NON );
+    /* branch updates */
+    updateNumberOfBranchClients( &branch->numberOfBranchClients , DELETE , NON);
+    updateSumOfAllBranchClients(&branch->sumOfAllBranchClients , -(client.acountBalance - client.loanBalance) , NON);
     return;
 }
 
