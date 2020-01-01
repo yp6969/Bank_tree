@@ -1,50 +1,24 @@
-#include <stdio.h>
-#define V 4
-#define G 1
 
-int isCoverVerteces(int* graph[] , int graph_N , int group[] , int group_N );
-int isInGroup(int i , int j , int group[] , int group_N);
-
-
-//Add edge. set arr[src][dest] = 1
-void addEdge(int* arr[],int src, int dest)
-{
-     *(arr[src]+dest) = 1;
-}
+typedef struct List_t{
+    int status;
+    struct List_t* next;
+}List;
 
 
-//print the adjMatrix
-int main()
-{
+/* checking by linked list */
+int isCoverVerteces(List* graph , int graph_N , int group[] , int group_N ){
     int i;
-    int arr[G] = {1};
-    int *adjMatrix[V] ;
-    for( i = 0 ; i < V ; i++){
-      
-    adjMatrix[i] = (int*)malloc(4*V) ;
+    int size = graph_N*graph_N;
+    for(i = 0 ; i < size ; i++){
+        if( graph->status == 1){
+            if( !isInGroup( i/graph_N , i%graph_N , group , group_N ) ) return 0;
+        }
+        graph = graph->next;
     }
-    
-    for(i=0 ; i<V ; i++){
-      for(int j=0 ; j<V ; j++){
-        *(adjMatrix[i]+j) = 0;
-      }
-    }
-    
-    addEdge(adjMatrix,0,1);
-    addEdge(adjMatrix,1,0);
-    addEdge(adjMatrix,1,2);
-    addEdge(adjMatrix,2,1);
-    addEdge(adjMatrix,0,2);
-    addEdge(adjMatrix,2,0);
-    addEdge(adjMatrix,0,3);
-    addEdge(adjMatrix,3,0);
-
-    printf("khdjkghhdsfkjg  ::::  %d \n", isCoverVerteces( adjMatrix , V ,arr , G));
-
-    return 0;
+    return 1;
 }
 
-
+/* cheking by 2D array */
 int isCoverVerteces(int* graph[] , int graph_N , int group[] , int group_N ){
     int i , j ;
     if( graph_N < 1 || group_N < 1) return 0;
@@ -57,6 +31,7 @@ int isCoverVerteces(int* graph[] , int graph_N , int group[] , int group_N ){
     return 1;
 }
 
+/*checking if the vertice is in the cover group */
 int isInGroup(int i , int j , int group[] , int group_N){
     int k;
     for( k=0 ; k<group_N ; k++ ) {
