@@ -2,7 +2,7 @@
 
 /*update all the bank parameters.*/
 void updateBankParameters(){
-    updateNameOfBank( &bank.nameOfBank ,  DELETE );
+    updateNameOfBank( &bank.nameOfBank ,  ADD );
     updateNumberOfBranch( &bank.numberOfBranch , NON , NON );
     updateNumberOfBankClients( &(bank.numberOfBankClients) , NON , NON );
     updateSumOfAllBankClients( &(bank.sumOfAllBankClients) , NON , NON );
